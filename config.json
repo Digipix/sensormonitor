@@ -1,0 +1,4 @@
+{
+    "warning_server": "http://jsonplaceholder.typicode.com/posts",
+    "threshold_value": 50
+}
