@@ -17,7 +17,11 @@
 # This code will monitor a sensor value over MQTT and send a warning message via HTTP POST if the sensor value
 # has been too high for more than 5 minutes.
 # After a warning is sent, the sensor value must be under the threshold for 5 minutes, before a new warning can be sent.
-
+#
+# inspiration from http://www.steves-internet-guide.com/python-mqtt-publish-subscribe/
+# and https://stackoverflow.com/questions/42473168/send-http-post-with-python
+# and https://pythonspot.com/json-encoding-and-decoding-with-python/
+# and https://github.com/bonus85/mqtt-xml
 
 import json
 import requests
@@ -60,11 +64,7 @@ class MyMQTTClass(mqtt.Client):
         return rc
 
 
-# This is my own code!
-# inspiration from http://www.steves-internet-guide.com/python-mqtt-publish-subscribe/
-# and https://stackoverflow.com/questions/42473168/send-http-post-with-python
-# and https://pythonspot.com/json-encoding-and-decoding-with-python/
-# and https://github.com/bonus85/mqtt-xml
+# This is my own code
 class SensorCheck:
 
     def __init__(self, warning_url, threshold):
@@ -81,10 +81,10 @@ class SensorCheck:
         times_to_wait = 30
 
         if sensorvalue < threshold:  # below threshold
+            print("Value is below threshold")
 
             # first we reset the over_threshold_counter
             self.above_threshold_counter = 0
-            print("Value is below threshold")
 
             # start counting how many times we are below threshold
             self.below_threshold_counter = self.below_threshold_counter + 1
@@ -96,10 +96,10 @@ class SensorCheck:
                 print("warning ready to send", self.warning_sent)
 
         else:  # above threshold
+            print("Value is above threshold")
 
             # first we reset the under_threshold_counter
             self.below_threshold_counter = 0
-            print("Value is above threshold")
 
             # start counting how many times we are above threshold
             self.above_threshold_counter = self.above_threshold_counter + 1
@@ -128,7 +128,9 @@ if __name__ == '__main__':
     # The config file contains the url to the server that will receive the warning
     # and the threshold value that will trigger the warning
 
-    with open('config.json') as f:  # inspiration from https://github.com/bonus85/mqtt-xml
+    # Reading the config file, and putting the values in variables
+    # inspiration from https://github.com/bonus85/mqtt-xml
+    with open('config.json') as f:
         config = json.load(f)
         warning_url = config['warning_server']
         threshold = config['threshold_value']
