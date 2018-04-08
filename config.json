@@ -1,4 +1,4 @@
 {
-    "warning_server": "http://jsonplaceholder.typicode.com/posts",
+    "warning_server": "https://jsonplaceholder.typicode.com/posts",
     "threshold_value": 50
 }
